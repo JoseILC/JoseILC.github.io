@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prospection CHR — leads multi-secteurs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F1512;--bg-2:#151E19;--card:#182420;--card-2:#1E2C26;
+    --line:#2A3B33;--line-soft:#22302A;--text:#EAF0EC;--text-soft:#9DB0A6;--text-dim:#6F857A;
+    --gold:#D9A94E;--leaf:#5FB98C;--leaf-deep:#2C7A56;--signal:#E86C4F;
+    --radius:14px;--sans:'Inter',system-ui,sans-serif;--disp:'Fraunces',Georgia,serif;
+  }
+  *{box-sizing:border-box;}html,body{margin:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:26px 22px 90px;}
+  a{color:var(--leaf);}
+
+  header.top{display:flex;align-items:center;gap:13px;margin-bottom:26px;}
+  .mark{width:42px;height:42px;flex:none;border-radius:11px;background:linear-gradient(150deg,var(--leaf-deep),var(--leaf));display:grid;place-items:center;}
+  .mark svg{width:22px;height:22px;}
+  .top h1{font-family:var(--disp);font-weight:600;font-size:22px;letter-spacing:-0.01em;margin:0;line-height:1;}
+  .top p{margin:3px 0 0;font-size:13px;color:var(--text-soft);}
+
+  .config{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:22px;}
+  .config .head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;}
+  .config .head h2{font-family:var(--disp);font-weight:500;font-size:18px;margin:0;}
+  .config .head .step{font-size:12px;color:var(--text-dim);}
+
+  .f{margin-bottom:18px;}
+  .f:last-child{margin-bottom:0;}
+  .f > label{display:block;font-size:12.5px;color:var(--text-soft);margin-bottom:7px;font-weight:500;}
+  .f .hint{font-size:11.5px;color:var(--text-dim);margin-top:6px;line-height:1.4;}
+  .grid2{display:grid;grid-template-columns:1fr 200px;gap:16px;}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr;}}
+  input.txt,select{width:100%;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;color:var(--text);font-family:var(--sans);font-size:14.5px;padding:11px 13px;transition:border-color .12s,box-shadow .12s;}
+  input.txt::placeholder{color:var(--text-dim);}
+  input.txt:focus,select:focus{outline:none;border-color:var(--leaf);box-shadow:0 0 0 3px rgba(95,185,140,.16);}
+
+  /* chips input */
+  .chipbox{background:var(--bg-2);border:1px solid var(--line);border-radius:9px;padding:7px 8px;display:flex;flex-wrap:wrap;gap:7px;align-items:center;min-height:46px;transition:border-color .12s,box-shadow .12s;}
+  .chipbox.focus{border-color:var(--leaf);box-shadow:0 0 0 3px rgba(95,185,140,.16);}
+  .chip{display:inline-flex;align-items:center;gap:7px;background:var(--card-2);border:1px solid var(--line);border-radius:7px;padding:5px 8px 5px 11px;font-size:13.5px;color:var(--text);}
+  .chip button{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:15px;line-height:1;padding:0;display:grid;place-items:center;width:16px;height:16px;border-radius:4px;}
+  .chip button:hover{color:var(--signal);background:rgba(232,108,79,.12);}
+  .chipbox input{flex:1;min-width:120px;background:none;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:14px;padding:5px 4px;}
+  .chipbox input::placeholder{color:var(--text-dim);}
+
+  /* language toggle chips */
+  .langset{display:flex;flex-wrap:wrap;gap:9px;}
+  .langset label{cursor:pointer;}
+  .langset input{position:absolute;opacity:0;pointer-events:none;}
+  .langset .pill{display:inline-block;padding:7px 13px;border-radius:20px;border:1px solid var(--line);font-size:13.5px;color:var(--text-soft);background:var(--bg-2);transition:all .12s;}
+  .langset input:checked + .pill{background:var(--leaf-deep);border-color:var(--leaf);color:#fff;font-weight:500;}
+  .langset input:focus-visible + .pill{box-shadow:0 0 0 3px rgba(95,185,140,.3);}
+
+  details.moreopts{margin-top:18px;}
+  details.moreopts > summary{cursor:pointer;list-style:none;font-size:13px;color:var(--text-soft);display:inline-flex;align-items:center;gap:6px;}
+  details.moreopts > summary::-webkit-details-marker{display:none;}
+  details.moreopts > summary .cv{transition:transform .15s;}
+  details.moreopts[open] > summary .cv{transform:rotate(90deg);}
+  .optsec{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft);}
+  .optsec .lbl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+  .optgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px 22px;}
+  @media(max-width:560px){.optgrid{grid-template-columns:1fr;}}
+  .geo3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;}
+  @media(max-width:560px){.geo3{grid-template-columns:1fr;}}
+  .geo3 label{display:block;font-size:11.5px;color:var(--text-soft);margin-bottom:5px;}
+  .opt{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px;}
+  .sw{position:relative;width:40px;height:23px;flex:none;}
+  .sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;}
+  .sw .tr{position:absolute;inset:0;background:var(--line);border-radius:20px;transition:background .14s;}
+  .sw .kn{position:absolute;top:3px;left:3px;width:17px;height:17px;background:#fff;border-radius:50%;transition:transform .14s;}
+  .sw input:checked + .tr{background:var(--leaf-deep);}
+  .sw input:checked + .tr + .kn{transform:translateX(17px);}
+
+  .launchbar{display:flex;align-items:center;gap:14px;margin-top:22px;flex-wrap:wrap;}
+  .btn{font-family:var(--sans);font-weight:600;font-size:15px;border:none;border-radius:11px;padding:13px 22px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:transform .05s,background .14s,opacity .14s;}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--signal);color:#fff;}
+  .btn-primary:hover{background:#d65c3f;}
+  .btn-primary:disabled{opacity:.55;cursor:progress;}
+  .btn-line{background:transparent;color:var(--text);border:1px solid var(--line);font-weight:500;font-size:13.5px;padding:10px 16px;border-radius:10px;}
+  .btn-line:hover{border-color:var(--text-dim);}
+  .importlab{font-size:12.5px;color:var(--text-dim);}
+  .importlab a{cursor:pointer;text-decoration:underline;}
+  .status{font-size:12.5px;min-height:16px;}
+  .status.ok{color:var(--leaf);}.status.err{color:var(--signal);}.status.busy{color:var(--text-soft);}
+
+  .webhook-adv{margin-top:14px;}
+  .webhook-adv summary{cursor:pointer;list-style:none;font-size:12px;color:var(--text-dim);}
+  .webhook-adv summary::-webkit-details-marker{display:none;}
+  .webhook-adv input{margin-top:10px;width:100%;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;color:var(--text);font-size:13px;padding:9px 11px;}
+  .webhook-adv input:focus{outline:none;border-color:var(--leaf);}
+  .webhook-adv .h{font-size:11.5px;color:var(--text-dim);margin-top:6px;line-height:1.4;}
+
+  #results{display:none;}#results.on{display:block;animation:rise .4s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:6px 0 20px;}
+  @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--card-2);border:1px solid var(--line);border-radius:12px;padding:15px 16px;}
+  .stat .v{font-family:var(--disp);font-weight:600;font-size:26px;line-height:1;}
+  .stat .v.g{color:var(--gold);}.stat .v.l{color:var(--leaf);}
+  .stat .k{font-size:12px;color:var(--text-soft);margin-top:6px;}
+  .res-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap;}
+  .res-head h2{font-family:var(--disp);font-weight:500;font-size:19px;margin:0;}
+  .res-head .sub{font-size:12.5px;color:var(--text-dim);}
+  .tablewrap{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--card);overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  thead th{text-align:left;font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-dim);padding:12px 14px;background:var(--bg-2);border-bottom:1px solid var(--line);white-space:nowrap;}
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--line-soft);vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--card-2);}
+  .name{font-weight:600;color:var(--text);}
+  .cat{font-size:11.5px;color:var(--text-dim);display:block;margin-top:2px;}
+  .rating{display:inline-flex;align-items:center;gap:4px;font-weight:600;color:var(--gold);white-space:nowrap;}
+  .muted{color:var(--text-soft);}
+  .web{color:var(--leaf);text-decoration:none;word-break:break-all;}.web:hover{text-decoration:underline;}
+  .nolink{color:var(--text-dim);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.3-5.4-6.3-10a6.3 6.3 0 0 1 12.6 0c0 4.6-6.3 10-6.3 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+    </div>
+    <div>
+      <h1>Prospection multi-secteurs</h1>
+      <p>Plusieurs métiers, plusieurs villes, une seule recherche.</p>
+    </div>
+  </header>
+
+  <div class="config">
+    <div class="head"><h2>Nouvelle recherche</h2><span class="step">Définissez la cible</span></div>
+
+    <div class="f">
+      <label>Types d'établissement</label>
+      <div class="chipbox" id="cb-search" data-input="in-search">
+        <input type="text" id="in-search" placeholder="Tapez un métier puis Entrée — crêperie, cuisiniste…">
+      </div>
+      <p class="hint">Ajoutez autant de métiers que voulu. Chaque type est une recherche Google Maps distincte.</p>
+    </div>
+
+    <div class="f">
+      <label>Zones de recherche</label>
+      <div class="chipbox" id="cb-loc" data-input="in-loc">
+        <input type="text" id="in-loc" placeholder="Ville, Pays puis Entrée — ex. Lille, France">
+      </div>
+      <p class="hint">Une ligne par zone. C'est ce champ qui pilote la recherche multi-villes.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="f">
+        <label>Langue principale des fiches</label>
+        <select id="language">
+          <option value="fr" selected>Français (fr)</option>
+          <option value="en">English (en)</option>
+          <option value="es">Español (es)</option>
+          <option value="nl">Nederlands (nl)</option>
+          <option value="de">Deutsch (de)</option>
+          <option value="it">Italiano (it)</option>
+        </select>
+      </div>
+      <div class="f">
+        <label>Nombre max par recherche</label>
+        <input class="txt" type="number" id="maxplaces" value="10" min="1" max="999">
+      </div>
+    </div>
+
+    <div class="f">
+      <label>Langues additionnelles</label>
+      <div class="langset" id="addlangs">
+        <label><input type="checkbox" value="en" checked><span class="pill">English</span></label>
+        <label><input type="checkbox" value="es"><span class="pill">Español</span></label>
+        <label><input type="checkbox" value="nl"><span class="pill">Nederlands</span></label>
+        <label><input type="checkbox" value="de"><span class="pill">Deutsch</span></label>
+        <label><input type="checkbox" value="it"><span class="pill">Italiano</span></label>
+        <label><input type="checkbox" value="pt"><span class="pill">Português</span></label>
+      </div>
+      <p class="hint">Codes de langue (en, es…). Récupère les fiches aussi dans ces langues.</p>
+    </div>
+
+    <details class="moreopts">
+      <summary><svg class="cv" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg> Options avancées (géo &amp; contacts)</summary>
+
+      <div class="optsec">
+        <div class="lbl">Géolocalisation</div>
+        <div class="geo3">
+          <div><label for="city">Ville</label><input class="txt" type="text" id="city" value="Lille"></div>
+          <div><label for="state">Région / État</label><input class="txt" type="text" id="state" value="Nord"></div>
+          <div><label for="country">Pays</label>
+            <select id="country">
+              <option value="fr" selected>France (fr)</option>
+              <option value="be">Belgique (be)</option>
+              <option value="lu">Luxembourg (lu)</option>
+              <option value="ch">Suisse (ch)</option>
+              <option value="es">Espagne (es)</option>
+              <option value="de">Allemagne (de)</option>
+            </select>
+          </div>
+        </div>
+        <div class="optgrid">
+          <div class="opt">Découpage par subdivisions<label class="sw"><input type="checkbox" id="enableSubdivision" checked><span class="tr"></span><span class="kn"></span></label></div>
+          <div class="opt">Correspondance géo stricte<label class="sw"><input type="checkbox" id="geoStrictMatch"><span class="tr"></span><span class="kn"></span></label></div>
+          <div class="opt">Retrouver adresses manquantes<label class="sw"><input type="checkbox" id="reverseGeocodeMissingAddress" checked><span class="tr"></span><span class="kn"></span></label></div>
+          <div class="opt">Écarter les établissements fermés<label class="sw"><input type="checkbox" id="skipClosedPlaces"><span class="tr"></span><span class="kn"></span></label></div>
+        </div>
+      </div>
+
+      <div class="optsec">
+        <div class="lbl">Contacts</div>
+        <div class="optgrid">
+          <div class="opt">Ouvrir la page contact<label class="sw"><input type="checkbox" id="contactsFetchContactPage" checked><span class="tr"></span><span class="kn"></span></label></div>
+          <div class="opt">Filtrer emails par domaine du site<label class="sw"><input type="checkbox" id="contactsFilterEmailsByWebsiteDomain" checked><span class="tr"></span><span class="kn"></span></label></div>
+          <div class="opt">Repli proxy<label class="sw"><input type="checkbox" id="contactsProxyFallback" checked><span class="tr"></span><span class="kn"></span></label></div>
+          <div class="opt">Ignorer les chaînes<label class="sw"><input type="checkbox" id="contactsSkipChains" checked><span class="tr"></span><span class="kn"></span></label></div>
+          <div class="opt">Extraire contacts du site<label class="sw"><input type="checkbox" id="extractContactsFromWebsite"><span class="tr"></span><span class="kn"></span></label></div>
+        </div>
+      </div>
+    </details>
+
+    <div class="launchbar">
+      <button class="btn btn-primary" id="launch">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-14 9V3z"/></svg>
+        Lancer la recherche
+      </button>
+      <span class="importlab">ou <a id="importBtn">importez un export CSV</a> pour vos vrais résultats.</span>
+      <input type="file" id="fileInput" accept=".csv" style="display:none;">
+      <span class="status" id="cfgStatus"></span>
+    </div>
+
+    <details class="webhook-adv">
+      <summary>⚙︎ Connexion en direct (avancé)</summary>
+      <input type="text" id="hook" placeholder="URL du webhook Make.com — https://hook.eu2.make.com/…">
+      <p class="h">Renseignée, le bouton envoie la recherche à votre scénario Make. À réserver aux tests, jamais à une présentation en direct.</p>
+    </details>
+  </div>
+
+  <div id="results">
+    <div class="stats" id="stats"></div>
+    <div class="res-head">
+      <div><h2>Résultats</h2><span class="sub" id="resSub"></span></div>
+      <button class="btn btn-line" id="export">⭳ Exporter vers Excel</button>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Établissement</th><th>Adresse</th><th>Téléphone</th><th>Site web</th><th>Note</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id);};
+
+  /* ---------- chips ---------- */
+  function Chips(boxId, inputId, initial){
+    var box=$(boxId), input=$(inputId), items=initial.slice();
+    function paint(){
+      box.querySelectorAll(".chip").forEach(function(c){c.remove();});
+      items.forEach(function(v,i){
+        var c=document.createElement("span"); c.className="chip";
+        c.innerHTML='<span></span><button type="button" aria-label="Retirer">&times;</button>';
+        c.firstChild.textContent=v;
+        c.querySelector("button").addEventListener("click",function(){items.splice(i,1);paint();});
+        box.insertBefore(c,input);
+      });
+    }
+    function add(v){ v=v.trim(); if(v && items.indexOf(v)===-1){items.push(v);} input.value=""; paint(); }
+    input.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===","){ e.preventDefault(); add(input.value); }
+      else if(e.key==="Backspace" && input.value==="" && items.length){ items.pop(); paint(); }
+    });
+    input.addEventListener("blur",function(){ if(input.value.trim()) add(input.value); });
+    box.addEventListener("click",function(){ input.focus(); });
+    input.addEventListener("focus",function(){box.classList.add("focus");});
+    input.addEventListener("blur",function(){box.classList.remove("focus");});
+    paint();
+    return { get:function(){return items.slice();} };
+  }
+  var searchChips=Chips("cb-search","in-search",["Crêperie","Cuisiniste"]);
+  var locChips=Chips("cb-loc","in-loc",["Lille, France","Paris, France"]);
+
+  function addLangs(){
+    return Array.prototype.slice.call(document.querySelectorAll("#addlangs input:checked")).map(function(i){return i.value;});
+  }
+
+  /* ---------- payload (schéma exact du nouvel actor) ---------- */
+  function buildPayload(){
+    return {
+      additionalLanguages: addLangs(),
+      city: $("city").value.trim(),
+      contactsFetchContactPage: $("contactsFetchContactPage").checked,
+      contactsFilterEmailsByWebsiteDomain: $("contactsFilterEmailsByWebsiteDomain").checked,
+      contactsProxyFallback: $("contactsProxyFallback").checked,
+      contactsSkipChains: $("contactsSkipChains").checked,
+      countryCode: $("country").value,
+      enableSubdivision: $("enableSubdivision").checked,
+      extractContactsFromWebsite: $("extractContactsFromWebsite").checked,
+      geoStrictMatch: $("geoStrictMatch").checked,
+      language: $("language").value,
+      locationQueries: locChips.get(),
+      maxCrawledPlacesPerSearch: parseInt($("maxplaces").value,10)||10,
+      reverseGeocodeMissingAddress: $("reverseGeocodeMissingAddress").checked,
+      searchStringsArray: searchChips.get(),
+      skipClosedPlaces: $("skipClosedPlaces").checked,
+      state: $("state").value.trim()
+    };
+  }
+
+  /* ---------- résultats (import / stats / export) ---------- */
+  var current=[];
+  function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function renderRows(rows){
+    $("tbody").innerHTML=rows.map(function(r){
+      var web=r.web?'<a class="web" href="https://'+esc(r.web)+'" target="_blank" rel="noopener">'+esc(r.web)+'</a>':'<span class="nolink">—</span>';
+      var rating=(r.rating!=null&&r.rating!=="")?'<span class="rating">★ '+esc(r.rating)+'</span> <span class="muted">('+esc(r.reviews||0)+')</span>':'<span class="nolink">—</span>';
+      return '<tr><td><span class="name">'+esc(r.name)+'</span><span class="cat">'+esc(r.cat||"")+'</span></td><td class="muted">'+esc(r.addr||"")+'</td><td class="muted">'+esc(r.phone||"—")+'</td><td>'+web+'</td><td>'+rating+'</td></tr>';
+    }).join("");
+  }
+  function renderStats(rows){
+    var withWeb=rows.filter(function(r){return r.web;}).length;
+    var withPhone=rows.filter(function(r){return r.phone&&r.phone!=="—";}).length;
+    var rated=rows.filter(function(r){return r.rating;});
+    var avg=rated.length?(rated.reduce(function(a,r){return a+parseFloat(r.rating);},0)/rated.length).toFixed(1):"—";
+    $("stats").innerHTML=
+      '<div class="stat"><div class="v l">'+rows.length+'</div><div class="k">établissements trouvés</div></div>'+
+      '<div class="stat"><div class="v">'+withPhone+'</div><div class="k">avec téléphone</div></div>'+
+      '<div class="stat"><div class="v">'+withWeb+'</div><div class="k">avec site web</div></div>'+
+      '<div class="stat"><div class="v g">'+avg+'</div><div class="k">note moyenne</div></div>';
+  }
+  function showResults(rows){
+    current=rows; renderStats(rows); renderRows(rows);
+    var types=searchChips.get().join(" · ")||"—", zones=locChips.get().join(" · ")||"—";
+    $("resSub").textContent=types+"  —  "+zones;
+    var r=$("results"); r.classList.add("on"); r.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  $("launch").addEventListener("click",function(){
+    var hook=$("hook").value.trim(), btn=this;
+    if(hook){
+      btn.disabled=true; $("cfgStatus").className="status busy"; $("cfgStatus").textContent="Envoi au scénario…";
+      var p=buildPayload();
+      var body=Object.assign({}, p, { inputJson: JSON.stringify(p) });
+      fetch(hook,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
+        .then(function(res){$("cfgStatus").className="status "+(res.ok?"ok":"err");$("cfgStatus").textContent=res.ok?"Recherche envoyée au scénario.":"Réponse "+res.status;})
+        .catch(function(){$("cfgStatus").className="status err";$("cfgStatus").textContent="Envoi bloqué (CORS). Vérifiez l'History dans Make.";})
+        .finally(function(){btn.disabled=false;});
+      return;
+    }
+    $("cfgStatus").className="status err";
+    $("cfgStatus").textContent="Renseignez le webhook Make (options avancées) pour lancer, ou importez un CSV pour afficher des résultats.";
+  });
+
+  $("importBtn").addEventListener("click",function(){$("fileInput").click();});
+  $("fileInput").addEventListener("change",function(e){
+    var file=e.target.files[0]; if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(){
+      try{
+        var rows=parseCSV(reader.result);
+        if(!rows.length){$("cfgStatus").className="status err";$("cfgStatus").textContent="CSV vide ou illisible.";return;}
+        showResults(rows); $("cfgStatus").className="status ok"; $("cfgStatus").textContent=rows.length+" leads importés.";
+      }catch(err){$("cfgStatus").className="status err";$("cfgStatus").textContent="Import impossible : "+err.message;}
+    };
+    reader.readAsText(file,"utf-8");
+  });
+  function parseCSV(text){
+    var lines=splitCSV(text); if(lines.length<2)return [];
+    var header=lines[0].map(function(h){return h.trim().toLowerCase();});
+    function col(){for(var i=0;i<arguments.length;i++){var idx=header.indexOf(arguments[i]);if(idx>-1)return idx;}return -1;}
+    var iName=col("title","name"),iAddr=col("address","street"),iPhone=col("phone","phoneunformatted"),
+        iWeb=col("website","url","domain"),iRate=col("totalscore","rating"),iRev=col("reviewscount","reviews"),iCat=col("categoryname","category");
+    var out=[];
+    for(var r=1;r<lines.length;r++){
+      var row=lines[r]; if(!row.length||(row.length===1&&!row[0]))continue;
+      var web=iWeb>-1?(row[iWeb]||""):""; web=web.replace(/^https?:\/\//,"").replace(/\/$/,"");
+      out.push({name:iName>-1?row[iName]:"(sans nom)",addr:iAddr>-1?row[iAddr]:"",phone:iPhone>-1?row[iPhone]:"",web:web,rating:iRate>-1?row[iRate]:"",reviews:iRev>-1?row[iRev]:"",cat:iCat>-1?row[iCat]:""});
+    }
+    return out;
+  }
+  function splitCSV(text){
+    var rows=[],row=[],cur="",q=false,c; text=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+    for(var i=0;i<text.length;i++){c=text[i];
+      if(q){if(c==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=c;}
+      else{if(c==='"')q=true;else if(c===','){row.push(cur);cur="";}else if(c==='\n'){row.push(cur);rows.push(row);row=[];cur="";}else cur+=c;}
+    }
+    if(cur!==""||row.length){row.push(cur);rows.push(row);}
+    return rows;
+  }
+  $("export").addEventListener("click",function(){
+    if(!current.length)return;
+    var head=["Établissement","Catégorie","Adresse","Téléphone","Site web","Note","Nombre d'avis"];
+    var esc2=function(v){v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+    var lines=[head.join(",")];
+    current.forEach(function(r){lines.push([r.name,r.cat,r.addr,r.phone,r.web,r.rating,r.reviews].map(esc2).join(","));});
+    var blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8;"});
+    var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+    a.download="leads-"+((locChips.get()[0]||"prospection").toLowerCase().replace(/[^a-z0-9]+/g,"-"))+".csv";
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+
+})();
+</script>
+</body>
+</html>
